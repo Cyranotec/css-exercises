@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fix the Cascade</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <p class="para">I'm just a paragraph with extra bold text!</p>
-    <p class="para small-para">I'm a smaller paragraph, also with extra bold text!</p>
 
-    <button id="confirm-button" class="button confirm">Confirm</button>
-    <button id="cancel-button" class="button cancel">Cancel</button>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix the Cascade</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-    <div class="text">I'm a div with thin text!</div>
-    <div class="text">I'm a div with thin text and a child div!
-      <div class="text child">I'm a smaller child div with extra bold text.</div>
-    </div>
-  </body>
+<body>
+  <!-- Rules applied originally:
+     - Element body: font-family. No conflicts so far
+     - Grouping .para, small-para: color: hsl(0, 0%, 0%);font-weight: 800; No conflicts so far.
+     - Class .para: font-size: 22px; CONFLICT: font-size, .para Class selector wins
+     -->
+  <p class="para">I'm just a paragraph with extra bold text!</p>
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far
+    - Grouping .para, small-para: color: hsl(0, 0%, 0%);font-weight: 800; No conflicts so far.
+    - Class .small-para:   font-size: 14px; font-weight: 800; CONFLICT: font-weight; small-para Class selector wins
+    - Class .para: font-size: 22px; font-size conflict, .para Class selector wins
+    *Solution: increase specificity adding a chain selector.para.small-para
+  -->
+  <p class="para small-para">I'm a smaller paragraph, also with extra bold text!</p>
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far.
+    - Class .confirm: background: green;color: white; font-weight: bold; No conflicts so far.
+    - Class .button:  background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-size: 20px; CONFLICT: background-color, color. Class last defined .button wins
+    *Solution: Change def order between .confirm and .button
+  -->
+  <button id="confirm-button" class="button confirm">Confirm</button>
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far.
+    - Class .button:  background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-size: 20px; No conflicts so far.
+    - Class .cancel doesn't exist
+  -->
+  <button id="cancel-button" class="button cancel">Cancel</button>
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far.
+    - Chaining div Element and .text Class:   color: rgb(0, 0, 0); font-size: 22px;font-weight: 100; No conflicts so far.
+  -->
+  <div class="text">I'm a div with thin text!</div>
+
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far.
+    - Chaining div Element and .text Class:   color: rgb(0, 0, 0); font-size: 22px;font-weight: 100; No conflicts so far.
+  -->
+  <div class="text">I'm a div with thin text and a child div!
+
+  <!-- Rules applied originally:
+    - Element body: font-family. No conflicts so far.
+    - Class .child:   color: rgb(0, 0, 0); font-weight: 800; font-size: 14px; No conflicts so far.
+    - Chaining div Element and .text Class:   color: rgb(0, 0, 0); font-size: 22px;font-weight: 100; CONFLICTS: color, font-size, font-weight; Chaining div Element and .text Class Wins
+    *Solution: Increase specificity of child adding .text.child selector and Change def order with .div.text
+  -->
+    <div class="text child">I'm a smaller child div with extra bold text.</div>
+  </div>
+</body>
+
 </html>
